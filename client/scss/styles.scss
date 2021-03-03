@@ -1,3 +1,40 @@
 body {
   background-color: rgb(116, 116, 116);
 }
+
+h1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.book {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  margin: 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgb(74, 74, 74);
+  z-index: 10;
+}
+
+.allBooks {
+  display: flex;
+  flex-direction: column;
+  background-color: gray;
+  max-width: 1000px;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.search {
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+}

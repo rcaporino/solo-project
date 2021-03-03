@@ -11,8 +11,9 @@ module.exports = () => {
     entry: "./client/index.js",
     devServer: {
       publicPath: "/build/",
+      historyApiFallback: true,
       proxy: {
-        '/api': 'http://localhost:3000'
+        '/getusers': 'http://localhost:3000'
       }
     },
     output: {

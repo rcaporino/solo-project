@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import App from './components/App.jsx';
+import App from './App.jsx';
 
 //maybe need to import styles here!!
 import styles from './scss/styles.scss'
