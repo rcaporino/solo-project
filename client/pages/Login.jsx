@@ -14,7 +14,7 @@ const LogIn = (props) => {
           Password: 
           <input type="password" onChange={props.handlePasswordChange} />
         </label>
-        <input type="submit" value='Log In'/>
+        <input type="submit" value='Log In!'/>
         <Link to='/signup'>
           <button>Sign Up</button>
         </Link>

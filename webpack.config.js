@@ -15,7 +15,9 @@ module.exports = () => {
       proxy: {
         '/login': 'http://localhost:3000',
         '/signup': 'http://localhost:3000',
-        '/isloggedin': 'http://localhost:3000'
+        '/isloggedin': 'http://localhost:3000',
+        '/addbook': 'http://localhost:3000',
+        '/mylibrary': 'http://localhost:3000'
       }
     },
     output: {

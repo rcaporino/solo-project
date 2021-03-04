@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const userController = require('./controllers/userController');
 const cookieController = require('./controllers/cookieController');
 const sessionController = require('./controllers/sessionController');
+const bookController = require('./controllers/bookController');
 
 console.log(process.env.NODE_ENV);
 const mongoURI = process.env.NODE_ENV === 'development' ? 'mongodb://localhost/soloprojectdev' : 'mongodb://localhost/soloprojectpro';
@@ -40,6 +41,15 @@ app.post('/login', userController.verifyUser, cookieController.setSSIDCookie, se
 app.post('/signup', userController.createUser, (req, res) => {
   return res.status(200).send();
 });
+
+app.post('/addbook', bookController.createBook, userController.addBook, (req, res) => {
+  console.log('responding from book creation');
+  res.status(200).json(res.locals.data);
+});
+
+app.get('/mylibrary', userController.getLibrary, (req, res) => {
+  res.status(200).json(res.locals.library);
+})
 
 app.get('/*', (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, '../index.html'));

@@ -3,9 +3,10 @@ import { Switch, Route, Link, withRouter } from 'react-router-dom';
 
 import fetch from 'isomorphic-fetch';
 
-import Home from './components/Home.jsx';
+import Home from './pages/Home.jsx';
 import LogIn from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
+import MyLibrary from './pages/MyLibrary.jsx';
 
 class App extends Component {
   constructor(props) {
@@ -25,6 +26,8 @@ class App extends Component {
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.currSearchUpdate = this.currSearchUpdate.bind(this);
     this.search = this.search.bind(this);
+    this.addBook = this.addBook.bind(this);
+    this.getLibrary = this.getLibrary.bind(this);
   }
 
   handleUsernameChange(e) {
@@ -36,7 +39,7 @@ class App extends Component {
   }
 
   handleLogIn(e) {
-    fetch('http://localhost:8080/login', {
+    fetch('/login', {
       method: 'POST',
       body: JSON.stringify({
         username: this.state.username,
@@ -47,7 +50,10 @@ class App extends Component {
       .then((response) => response.json())
       .then((json) => {
         if (!json.found) this.props.history.push('/signup');
-        else this.props.history.push('/home');
+        else {
+          this.props.history.push('/home');
+          this.setState({ password: '' });
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -56,7 +62,7 @@ class App extends Component {
   }
 
   handleSignUp(e) {
-    fetch('http://localhost:8080/signup', {
+    fetch('/signup', {
       method: 'POST',
       body: JSON.stringify({
         username: this.state.username,
@@ -72,16 +78,47 @@ class App extends Component {
   }
 
   currSearchUpdate(e) {
-    this.setState({currSearch: e.target.value});
+    this.setState({ currSearch: e.target.value });
   }
 
   search() {
     const searchQuery = this.state.currSearch.split(' ').join('+');
-    fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&maxResults=40`)
-    .then(response => response.json())
-    .then(result => {
-      this.setState({ booksSearch: result.items})
+    fetch(
+      `https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&maxResults=40`
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        this.setState({ booksSearch: result.items });
+      });
+  }
+
+  addBook(e, indx) {
+    const currBook = this.state.booksSearch[indx].volumeInfo;
+    console.log(currBook);
+    fetch('/addbook', {
+      method: 'POST',
+      body: JSON.stringify({
+        title: currBook.title,
+        authors: currBook.authors,
+      }),
+      headers: { 'Content-type': 'application/json; charset=UTF-8' },
+    }).catch((err) => {
+      console.log(err);
     });
+  }
+
+  getLibrary(e) {
+    console.log('getting library');
+    fetch('/mylibrary')
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        this.state.userBooks = result;
+        this.props.history.push('/mylibrary');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   componentDidMount() {
@@ -93,16 +130,28 @@ class App extends Component {
       this.props.location.pathname !== prevProps.location.pathname &&
       this.props.location.pathname === '/login'
     ) {
-      fetch('http://localhost:8080/isloggedin')
-      .then(response => response.json())
-      .then(result => {
-        this.setState({auth: result.auth});
-        if(this.state.auth) this.props.history.push('/home');
-      })
-      .catch(err => {
-        console.log(err)
-      });
+      fetch('/isloggedin')
+        .then((response) => response.json())
+        .then((result) => {
+          this.setState({ auth: result.auth });
+          if (this.state.auth) this.props.history.push('/home');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
+    // if(this.props.location.pathname === '/mylibrary'){
+    //   console.log('getting library');
+    //   fetch('/mylibrary')
+    //     .then((response) => response.json())
+    //     .then((result) => {
+    //       console.log(result);
+    //       this.state.userBooks = result;
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     })
+    // }
   }
 
   render() {
@@ -117,13 +166,25 @@ class App extends Component {
             />
           </Route>
           <Route path='/home'>
-            <Home currSearchUpdate={this.currSearchUpdate} search={this.search} booksSearch={this.state.booksSearch}/>
+            <Home
+              currSearchUpdate={this.currSearchUpdate}
+              search={this.search}
+              booksSearch={this.state.booksSearch}
+              addBook={this.addBook}
+              getLibrary={this.getLibrary}
+            />
           </Route>
           <Route path='/login'>
             <LogIn
               handleLogIn={this.handleLogIn}
               handleUsernameChange={this.handleUsernameChange}
               handlePasswordChange={this.handlePasswordChange}
+            />
+          </Route>
+          <Route path='/mylibrary'>
+            <MyLibrary
+              userBooks={this.state.userBooks}
+              booksSearch={this.state.booksSearch}
             />
           </Route>
         </Switch>

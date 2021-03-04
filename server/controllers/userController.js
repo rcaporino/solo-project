@@ -7,9 +7,9 @@ userController.verifyUser = (req, res, next) => {
   console.log('VerifyUser');
   const user = req.body.username;
   const password = req.body.password;
-  User.find({username: user, password: password})
+  User.find({ username: user, password: password })
     .then((data) => {
-      if(data.length === 0) {
+      if (data.length === 0) {
         res.locals.found = false;
       } else {
         res.locals.found = true;
@@ -30,7 +30,7 @@ userController.verifyUser = (req, res, next) => {
 userController.createUser = (req, res, next) => {
   console.log('creating user')
 
-  const newUser = {username: req.body.username, password: req.body.password};
+  const newUser = { username: req.body.username, password: req.body.password };
   User.create(newUser)
     .then((data) => {
       res.locals.userinfo = data;
@@ -44,7 +44,46 @@ userController.createUser = (req, res, next) => {
         }
       });
     })
+}
 
+userController.addBook = (req, res, next) => {
+  console.log('adding book to user');
+  const { ssid } = req.cookies;
+
+  User.findByIdAndUpdate(ssid,
+    { $push: { library: res.locals.newBook }},
+    { new: true, useFindAndModify: false }
+    )
+  // User.find({ _id: ssid })
+  //   .then(user => {
+  //     console.log(user);
+  //     user[0].library.push(res.locals.bookData);
+  //     return next();
+  //   })
+    .catch(err => {
+      return next({
+        log: `userController.addBook: ERROR: Error adding a book to user: ${err}`,
+        message: {
+          err: "Error occurred in userController.addBook. Check server log for more details"
+        }
+      });
+    })
+}
+
+userController.getLibrary = (req, res, next) => {
+  console.log('getting library')
+
+  const { ssid } = req.cookies;
+
+  User.find({ _id: ssid })
+    .populate('library')
+    .then(data => {
+      res.locals.library = data[0].library;
+      return next()
+    })
+    .catch(err => {
+      return next(err);
+    });
 }
 
 
