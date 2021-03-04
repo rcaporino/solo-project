@@ -4,12 +4,12 @@ const userController = {};
 
 userController.verifyUser = (req, res, next) => {
   // write code here
+  console.log('VerifyUser');
   const user = req.body.username;
   const password = req.body.password;
   User.find({username: user, password: password})
     .then((data) => {
       if(data.length === 0) {
-        console.log('test');
         res.locals.found = false;
       } else {
         res.locals.found = true;
@@ -28,7 +28,23 @@ userController.verifyUser = (req, res, next) => {
 };
 
 userController.createUser = (req, res, next) => {
-  return next();
+  console.log('creating user')
+
+  const newUser = {username: req.body.username, password: req.body.password};
+  User.create(newUser)
+    .then((data) => {
+      res.locals.userinfo = data;
+      return next();
+    })
+    .catch(err => {
+      return next({
+        log: `userController.createUser: ERROR: Error creating a user: ${err}`,
+        message: {
+          err: "Error occurred in userController.createUser. Check server log for more details"
+        }
+      });
+    })
+
 }
 
 

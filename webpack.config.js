@@ -13,7 +13,9 @@ module.exports = () => {
       publicPath: "/build/",
       historyApiFallback: true,
       proxy: {
-        '/login': 'http://localhost:3000'
+        '/login': 'http://localhost:3000',
+        '/signup': 'http://localhost:3000',
+        '/isloggedin': 'http://localhost:3000'
       }
     },
     output: {

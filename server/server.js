@@ -4,9 +4,11 @@ const path = require('path');
 const fetch = require('isomorphic-fetch');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 const userController = require('./controllers/userController');
+const cookieController = require('./controllers/cookieController');
+const sessionController = require('./controllers/sessionController');
 
 console.log(process.env.NODE_ENV);
 const mongoURI = process.env.NODE_ENV === 'development' ? 'mongodb://localhost/soloprojectdev' : 'mongodb://localhost/soloprojectpro';
@@ -17,7 +19,8 @@ db.once('open', () => console.log(`Conneted to mogoose at ${mongoURI}`));
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cookieParser());
+
 
 
 app.use('/build', express.static(path.join(__dirname, '../build')));
@@ -26,12 +29,20 @@ app.get('/', (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, '../index.html'));
 })
 
-app.post('/login', userController.verifyUser, (req, res) => {
-  res.status(200).json(res.locals);
+app.get('/isloggedin', sessionController.isLoggedIn, (req, res) => {
+  return res.status(200).json(res.locals);
+})
+
+app.post('/login', userController.verifyUser, cookieController.setSSIDCookie, sessionController.startSession, (req, res) => {
+  return res.status(200).json(res.locals);
 });
 
 app.post('/signup', userController.createUser, (req, res) => {
-  res.status(200).send();
+  return res.status(200).send();
+});
+
+app.get('/*', (req, res) => {
+  return res.status(200).sendFile(path.join(__dirname, '../index.html'));
 })
 
 app.use((err, req, res, next) => {
