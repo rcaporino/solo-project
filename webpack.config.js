@@ -13,7 +13,7 @@ module.exports = () => {
       publicPath: "/build/",
       historyApiFallback: true,
       proxy: {
-        '/getusers': 'http://localhost:3000'
+        '/login': 'http://localhost:3000'
       }
     },
     output: {

@@ -1,5 +1,5 @@
 import React from 'react';
-import Book from './book.jsx';
+import Book from './Book.jsx';
 
 const Books = (props) => {
   const { allBooks } = props;

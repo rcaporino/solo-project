@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import fetch from 'isomorphic-fetch';
-import Books from './books.jsx';
+import Books from './Books.jsx';
 
 class Search extends Component {
   constructor(props){

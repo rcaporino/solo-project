@@ -1,54 +1,81 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-//import TestApi from './components/testApi.jsx';
-import Search from './components/search.jsx';
 
-const App = () => (
-  <Router>
-    {/* <div id="app">
-      <Search />
-    </div> */}
-    <div>
-      <nav>
-        <ul>
-          <li>
-            <Link to='/'>Home</Link>
-          </li>
-          <li>
-            <Link to='/about'>About</Link>
-          </li>
-          <li>
-            <Link to='/users'>Users</Link>
-          </li>
-        </ul>
-      </nav>
+import { Switch, Route, Link, withRouter} from 'react-router-dom';
+import fetch from 'isomorphic-fetch';
+//import history from './history.js';
 
-      <Switch>
-        <Route path="/about">
-          <About />
-        </Route>
-        <Route path="/users">
-          <Users />
-        </Route>
-        <Route path="/">
-          <Home />
-        </Route>
-      </Switch>
+import Search from './components/Search.jsx';
+import LogIn from './pages/Login.jsx';
+import Signup from './pages/Signup.jsx';
 
-    </div>
-  </Router>
-);
 
-function Home() {
-  return <h2>Home</h2>;
+class App extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      username: '',
+      password: '',
+    }
+
+    this.handleSignUp = this.handleSignUp.bind(this);
+    this.handleLogIn = this.handleLogIn.bind(this);
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+  }
+  
+  handleUsernameChange(e) {
+      this.setState({username: e.target.value}, () => {
+        console.log(this.state.username);
+      })
+  }
+  
+  handlePasswordChange(e) {
+    this.setState({password: e.target.value}, () => {
+      console.log(this.state.password);
+    })
+  }
+
+  handleLogIn(e) {
+    fetch('http://localhost:8080/login', {
+      method: "POST",
+      body: JSON.stringify({username: this.state.username, password: this.state.password}),
+      headers: {"Content-type": "application/json; charset=UTF-8"}
+    })
+    .then(response => response.json())
+    .then(json => {
+      if (!json.found) this.props.history.push('/signup');
+      else this.props.history.push('/home');
+    })
+    .catch(err => console.log(err));
+    e.preventDefault();
+  }
+
+  handleSignUp(e) {
+    e.preventDefault();
+    this.props.history.push('/login');
+  }
+
+  render(){
+
+    return (
+      <div>
+        <Switch>
+          <Route path="/signup">
+            <Signup handleSignUp={this.handleSignUp} handleUsernameChange={this.handleUsernameChange} handlePasswordChange={this.handlePasswordChange}/>
+          </Route>
+          <Route path="/users">
+            <this.Users />
+          </Route>
+          <Route path="/home">
+            <Search />
+          </Route>
+          <Route path="/">
+            <LogIn handleLogIn={this.handleLogIn} handleUsernameChange={this.handleUsernameChange} handlePasswordChange={this.handlePasswordChange}/>
+          </Route>
+        </Switch>
+      </div>
+    );
+  }
 }
 
-function About() {
-  return <h2>About</h2>;
-}
-
-function Users() {
-  return <h2>Users</h2>;
-}
-
-export default App;
+export default withRouter(App);
