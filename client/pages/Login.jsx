@@ -14,12 +14,13 @@ const LogIn = (props) => {
           Password: 
           <input type="password" onChange={props.handlePasswordChange} />
         </label>
-        <input type="submit" value='Log In!'/>
-        <Link to='/signup'>
-          <button>Sign Up</button>
-        </Link>
+        <div className="logInBtnsContainer">
+          <button className='searchBtn' type="submit">Log In</button>
+          <Link to='/signup'>
+            <button className='navBtn'>Sign Up</button>
+          </Link>
+        </div>
       </form>
-      
     </div>
     );
 }

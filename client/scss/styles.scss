@@ -1,17 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+$primary-color: rgb(34, 34, 34);
+$secondary-color: rgb(84, 84, 84);
+$tertiary-color: rgb(214, 213, 213); 
+$background-color: rgb(250,250,250);
+$card-color: rgb(255,255,255); 
+$primary-blue: rgb(26,115,232);
+$border-color: rgb(171, 190, 214);
+$secondary-btn-color: #E3D7FF;
+
+
+html {
+  font-family: 'Roboto', sans-serif;
+}
+
 body {
-  background-color: rgb(116, 116, 116);
+  background-color: $background-color;
 }
 
 h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: $primary-color;
 }
 
 h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: $primary-color;
 }
 
 .logIn {
@@ -29,19 +47,65 @@ h2 {
 .book {
   display: flex;
   flex-direction: column;
-  background-color: white;
   margin: 10px;
-  border: 1px solid black;
+  border: 1px solid $border-color;
   border-radius: 5px;
-  box-shadow: 0px 0px 10px black;
-  flex: 1;
+  box-shadow: 0px 0px 10px rgb(204, 203, 203);
+  flex: 1 1 0;
+  padding: 10px;
+  background-color: $card-color;
+
+  h2{
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    color: $primary-color
+  }
+
+  button {
+    align-self: flex-end;
+    padding: 8px 10px;
+    border: 1px solid $border-color;
+    border-radius: 5px;
+    background-color: $primary-blue;
+    color: white;
+    
+
+    &:hover {
+      cursor: pointer;
+      filter: brightness(75%);
+      box-shadow: 0px 0px 10px rgb(204, 203, 203);
+    }
+  }
+
+  p {
+    color: $secondary-color;
+  }
+}
+
+.imageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img{
+    width: 150px;
+    height: 200px;
+    margin-right:20px; 
+  }
+}
+
+.bookContents {
+  display: flex;
 }
 
 .allBooks {
   display: flex;
   flex-direction: column;
-  background-color: gray;
+  flex-basis: auto;
+  background-color: rgb(220, 220, 220);
   max-width: 1000px;
+  width: 100%;
 }
 
 .results {
@@ -49,10 +113,62 @@ h2 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  flex: 0 1 auto;
 }
 
 .search {
   display: flex;
   justify-content: center;
   margin: 10px;
+  
+  input {
+    width: 400px;
+    border: 1px solid $border-color;
+    border-radius: 10px;
+    outline: none;
+    box-shadow: 0px 0px 10px rgb(204, 203, 203);
+  }
+
+  button {
+    border-radius: 5px;
+    margin: 5px 5px;
+    padding: 10px 10px;
+    &:hover{
+      cursor: pointer;
+      filter: brightness(75%);
+    }
+  }
+}
+
+.searchBtn {
+  background-color: $primary-blue;
+  color: white;
+  border: 1px solid $border-color;
+}
+
+.logOutBtn {
+  background-color: $background-color;
+  border-color: $border-color;
+  border: 1px solid $border-color;
+}
+
+.navBtn {
+  background-color: $secondary-btn-color;
+  border: 1px solid $border-color;
+}
+
+.logInBtnsContainer {
+  display: flex;
+
+  button {
+    padding: 8px 10px;
+    border: 1px solid $border-color;
+    border-radius: 5px;
+    margin: 5px;
+
+    &:hover {
+      cursor: pointer;
+      filter: brightness(75%);
+    }
+  }
 }

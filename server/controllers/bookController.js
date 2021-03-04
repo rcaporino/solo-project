@@ -10,6 +10,10 @@ bookController.createBook = (req, res, next) => {
     volumeInfo: {
       title: req.body.title,
       authors: req.body.authors,
+      description: req.body.description,
+      imageLinks: {
+        thumbnail: req.body.imageLinks.thumbnail
+      },
       pkey: `${ssid}${req.body.title}`
     }
   }

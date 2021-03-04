@@ -3,18 +3,18 @@ import Books from '../components/Books.jsx';
 import { Link, withRouter } from 'react-router-dom';
 
 const MyLibrary = (props) => {
-  const { userBooks } = props;
+  const { userBooks, logOut } = props;
 
   return (
     <div>
       <div className='search'>
         <Link to='/home'>
-          <button>Home</button>
+          <button className='navBtn'>Home</button>
         </Link>
-        <button>Log Out</button>
+        <button className='logOutBtn' onClick={logOut}>Log Out</button>
       </div>
       <div className='results'>
-        <Books allBooks={userBooks}/>
+        <Books allBooks={userBooks} library={true}/>
       </div>
     </div>
   );

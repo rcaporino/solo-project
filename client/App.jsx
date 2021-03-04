@@ -22,6 +22,7 @@ class App extends Component {
 
     this.handleSignUp = this.handleSignUp.bind(this);
     this.handleLogIn = this.handleLogIn.bind(this);
+    this.handleLogOut = this.handleLogOut.bind(this);
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.currSearchUpdate = this.currSearchUpdate.bind(this);
@@ -77,6 +78,20 @@ class App extends Component {
     e.preventDefault();
   }
 
+  handleLogOut(e) {
+    fetch('/logout', {
+      method: 'POST',
+    })
+      .then(() => {
+        this.setState({booksSearch: []});
+        this.props.history.push('/login');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    e.preventDefault();
+  }
+
   currSearchUpdate(e) {
     this.setState({ currSearch: e.target.value });
   }
@@ -89,17 +104,23 @@ class App extends Component {
       .then((response) => response.json())
       .then((result) => {
         this.setState({ booksSearch: result.items });
+        console.log(this.state.booksSearch);
       });
   }
 
   addBook(e, indx) {
     const currBook = this.state.booksSearch[indx].volumeInfo;
-    console.log(currBook);
+    //console.log(currBook.imageLinks.thumbnail);
+    //console.log(currBook);
     fetch('/addbook', {
       method: 'POST',
       body: JSON.stringify({
         title: currBook.title,
         authors: currBook.authors,
+        description: currBook.description,
+        imageLinks: {
+          thumbnail: currBook.imageLinks.thumbnail
+        },
       }),
       headers: { 'Content-type': 'application/json; charset=UTF-8' },
     }).catch((err) => {
@@ -140,18 +161,6 @@ class App extends Component {
           console.log(err);
         });
     }
-    // if(this.props.location.pathname === '/mylibrary'){
-    //   console.log('getting library');
-    //   fetch('/mylibrary')
-    //     .then((response) => response.json())
-    //     .then((result) => {
-    //       console.log(result);
-    //       this.state.userBooks = result;
-    //     })
-    //     .catch(err => {
-    //       console.log(err);
-    //     })
-    // }
   }
 
   render() {
@@ -172,6 +181,7 @@ class App extends Component {
               booksSearch={this.state.booksSearch}
               addBook={this.addBook}
               getLibrary={this.getLibrary}
+              logOut={this.handleLogOut}
             />
           </Route>
           <Route path='/login'>
@@ -185,6 +195,7 @@ class App extends Component {
             <MyLibrary
               userBooks={this.state.userBooks}
               booksSearch={this.state.booksSearch}
+              logOut={this.handleLogOut}
             />
           </Route>
         </Switch>

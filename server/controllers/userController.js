@@ -54,12 +54,6 @@ userController.addBook = (req, res, next) => {
     { $push: { library: res.locals.newBook }},
     { new: true, useFindAndModify: false }
     )
-  // User.find({ _id: ssid })
-  //   .then(user => {
-  //     console.log(user);
-  //     user[0].library.push(res.locals.bookData);
-  //     return next();
-  //   })
     .catch(err => {
       return next({
         log: `userController.addBook: ERROR: Error adding a book to user: ${err}`,

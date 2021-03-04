@@ -38,6 +38,11 @@ app.post('/login', userController.verifyUser, cookieController.setSSIDCookie, se
   return res.status(200).json(res.locals);
 });
 
+app.post('/logout', sessionController.endSession, (res, req) => {
+  //const { ssid } = res.cookies;
+  res.status(200).send();
+})
+
 app.post('/signup', userController.createUser, (req, res) => {
   return res.status(200).send();
 });
@@ -54,6 +59,8 @@ app.get('/mylibrary', userController.getLibrary, (req, res) => {
 app.get('/*', (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, '../index.html'));
 })
+
+
 
 app.use((err, req, res, next) => {
   const defaultErr = {

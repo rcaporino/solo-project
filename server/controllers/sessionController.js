@@ -53,4 +53,21 @@ sessionController.startSession = (req, res, next) => {
     })
 };
 
+sessionController.endSession = (req, res, next) => {
+  console.log('Ending session');
+  const { ssid } = req.cookies;
+  Session.deleteOne({cookieId: ssid})
+    .then(() => {
+      return next();
+    })
+    .catch(err => {
+      return next({
+        log: `sessionController.endSession: ERROR: Error ending a session: ${err}`,
+        message: {
+          err: "Error occurred in sessionController.endSession. Check server log for more details"
+        }
+      });
+    })
+}
+
 module.exports = sessionController;
